@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Geita Women Festival</title>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#e8e8f0;font-family:'Google Sans',Roboto,Arial,sans-serif;padding:20px}
+  .page{max-width:680px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+
+  .title-card{
+    background:#fff;border-radius:8px;
+    border-top:10px solid #4a4adb;
+    padding:24px 28px;
+    box-shadow:0 1px 3px rgba(0,0,0,.12)
+  }
+  .title-card h1{font-size:1.75rem;font-weight:400;color:#202124;margin-bottom:6px}
+  .title-card .count{font-size:0.85rem;color:#5f6368}
+
+  .q-card{
+    background:#fff;border-radius:8px;
+    padding:24px 28px 16px;
+    box-shadow:0 1px 3px rgba(0,0,0,.12)
+  }
+  .q-header{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+  .q-title{font-size:1rem;font-weight:500;color:#202124}
+  .q-count{font-size:0.8rem;color:#5f6368;margin:4px 0 4px}
+
+  .copy-btn{
+    background:none;border:none;color:#4a4adb;
+    font-size:0.82rem;cursor:pointer;
+    display:flex;align-items:center;gap:4px;
+    white-space:nowrap;font-family:inherit;padding:0
+  }
+  .copy-btn:hover{text-decoration:underline}
+  .chart-div{width:100%;height:220px}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="title-card">
+    <h1>GEITA WOMEN FESTIVAL</h1>
+    <div class="count">17,133 responses</div>
+  </div>
+  <div id="cards"></div>
+</div>
+
+<script>
+const COLOR_MAP = {
+  "Blue":   "#4472C4",
+  "Red":    "#E05C35",
+  "Orange": "#F0A500",
+  "Green":  "#5FAD56",
+  "Purple": "#9B59B6",
+  "Cyan":   "#17BECF",
+  "Pink":   "#E91E8C",
+  "Brown":  "#8B4513",
+  "Gray":   "#9E9E9E"
+};
+
+const DATA = [
+  {
+    title: "1. MPISHI BORA WA CHAKULA KWENYE MATUKIO",
+    responses: 2355,
+    candidates: [
+      { name: "LILIAN KAPALALA",         color: "Blue",   pct: 56.1 },
+      { name: "WARIDI CATERING",          color: "Red",    pct: 32.2 },
+      { name: "MWINGILA MTOTO CATERING",  color: "Orange", pct: 11.7 }
+    ]
+  },
+  {
+    title: "2. MPISHI NA MPAMBAJI BORA WA CAKE",
+    responses: 2282,
+    candidates: [
+      { name: "NURU CAKES",      color: "Blue", pct: 64.8 },
+      { name: "TRIPPLE B CAKES", color: "Red",  pct: 35.2 }
+    ]
+  },
+  {
+    title: "3. MPAMBAJI BORA WA MATUKIO",
+    responses: 2259,
+    candidates: [
+      { name: "MAMA LEKEY DECORATION",    color: "Blue",   pct: 39.9 },
+      { name: "MAMA TELEMAKO DECORATION", color: "Red",    pct: 31.6 },
+      { name: "LOYCE EVENTS",             color: "Orange", pct: 28.5 }
+    ]
+  },
+  {
+    title: "4. MPISHI WA CAKE CHIPUKIZI",
+    responses: 3080,
+    candidates: [
+      { name: "DORA CAKES",     color: "Blue",   pct: 18.5 },
+      { name: "NEYLEE CAKES",   color: "Red",    pct: 13.1 },
+      { name: "MUM CAKES",      color: "Orange", pct: 8.1  },
+      { name: "DADAS CAKE",     color: "Green",  pct: 9.6  },
+      { name: "KAWISHE CAKES",  color: "Purple", pct: 27.8 },
+      { name: "MAUHIB BAKERY",  color: "Cyan",   pct: 2.6  },
+      { name: "PBE CAKES",      color: "Pink",   pct: 7.1  },
+      { name: "HAPPY CAKES",    color: "Brown",  pct: 12.6 },
+      { name: "MAUHABY BAKERY", color: "Gray",   pct: 0.7  }
+    ]
+  },
+  {
+    title: "5. MGAHAWA BORA",
+    responses: 2420,
+    candidates: [
+      { name: "VUMI MBOGA SABA", color: "Blue",   pct: 44.4 },
+      { name: "DIAS KITCHEN",    color: "Red",    pct: 33.8 },
+      { name: "MARY CAFE",       color: "Orange", pct: 21.9 }
+    ]
+  },
+  {
+    title: "6. MFANYA BIASHARA BORA",
+    responses: 4494,
+    candidates: [
+      { name: "AIKALESS FASHION",     color: "Blue",   pct: 34.1 },
+      { name: "NIYO SUPERMARKET",     color: "Red",    pct: 37.7 },
+      { name: "MAMA NANCY VITAMBAA",  color: "Orange", pct: 14.8 },
+      { name: "ELIKA BEAUTY COLLEGE", color: "Green",  pct: 4.5  },
+      { name: "GEITA CAKE TOOLS",     color: "Purple", pct: 8.9  }
+    ]
+  },
+  {
+    title: "7. MFANYA BIASHARA CHIPUKIZI",
+    responses: 3227,
+    candidates: [
+      { name: "HABIBA COLLECTION",      color: "Blue",   pct: 14.8 },
+      { name: "GEMMY FAST FOOD",        color: "Red",    pct: 26.6 },
+      { name: "ROSEWEDDING",            color: "Orange", pct: 12.8 },
+      { name: "MIASTORE",               color: "Green",  pct: 15.6 },
+      { name: "HAPPY UNDER WARE",       color: "Purple", pct: 10.6 },
+      { name: "JOYCE NA BIASHARA ZAKE", color: "Cyan",   pct: 11.1 },
+      { name: "JUPLINE INTERPRISES",    color: "Pink",   pct: 8.6  }
+    ]
+  },
+  {
+    title: "8. MFANYA BIASHARA MKONGWE",
+    responses: 3650,
+    candidates: [
+      { name: "MAMA NANCY VITAMBAA", color: "Blue",   pct: 40 },
+      { name: "MAMA INYASI",         color: "Red",    pct: 19.0 },
+      { name: "MAMA MASUKA",         color: "Orange", pct: 10.7 },
+      { name: "AIKALESS",            color: "Green",  pct: 30.3 }
+    ]
+  },
+  {
+    title: "9. MJASILIAMALI BORA",
+    responses: 1978,
+    candidates: [
+      { name: "BAFREM INTERPRISES",  color: "Blue",   pct: 17.4 },
+      { name: "ESTHER MASIMBA",      color: "Red",    pct: 38.1 },
+      { name: "GEITA FOOD PRODUCT",  color: "Orange", pct: 44.5 }
+    ]
+  },
+  {
+    title: "10. MJASILIAMALI CHIPUKIZI",
+    responses: 3391,
+    candidates: [
+      { name: "CLARY VENTURES",        color: "Blue",   pct: 34.3 },
+      { name: "PERONA MILK",           color: "Red",    pct: 10.9 },
+      { name: "ANNIE JUICE POINT",     color: "Orange", pct: 31.3 },
+      { name: "SANDRA JO FRESH JUICE", color: "Green",  pct: 9.4  },
+      { name: "BATICK ESCESS",         color: "Purple", pct: 12.6 },
+      { name: "SANDRA JUICE POINT",    color: "Cyan",   pct: 1.6  }
+    ]
+  },
+  {
+    title: "11. MWANASIASA BORA",
+    responses: 2368,
+    candidates: [
+      { name: "PATRICIA INNOCENT",   color: "Blue",   pct: 37.2 },
+      { name: "NAOMI KASIKA",        color: "Red",    pct: 26.7 },
+      { name: "ASHA MWANUNU HARUNA", color: "Orange", pct: 14.9 },
+      { name: "ESTHER JAMES",        color: "Green",  pct: 21.1 }
+    ]
+  },
+  {
+    title: "12. MFANYAKAZI BORA OFISI ZA SERIKALI",
+    responses: 2105,
+    candidates: [
+      { name: "ENG. ROSE MBAI (RS OFFICE)",           color: "Blue",   pct: 59.0 },
+      { name: "HYASINTA RUGEIYAMU (TUME YA MADINI)",  color: "Red",    pct: 38.9 },
+      { name: "JULIANA HAMARO (GEITA DC OFFICE)",     color: "Orange", pct: 2.1  }
+    ]
+  },
+  {
+    title: "13. MTUMISHI BORA SEKTA YA AFYA",
+    responses: 3355,
+    candidates: [
+      { name: "DR. MARY THOMAS",  color: "Blue",   pct: 41.1 },
+      { name: "ANGEL ZAHORO",     color: "Red",    pct: 21.8 },
+      { name: "FELISTER FELIX",   color: "Orange", pct: 34.9 },
+      { name: "ANJEL ZAHORO",     color: "Green",  pct: 1.7  },
+      { name: "ANJEL MKAJIKUTA",  color: "Purple", pct: 0.5  }
+    ]
+  },
+  {
+    title: "14. MWANASIASA BORA CHIPUKIZI",
+    responses: 2236,
+    candidates: [
+      { name: "SOPHIA SIMWA",   color: "Blue",   pct: 51.5 },
+      { name: "AMINA YUSUPHU",  color: "Red",    pct: 26.9 },
+      { name: "ASHA KATWALE",   color: "Orange", pct: 21.6 }
+    ]
+  },
+  {
+    title: "15. USTAWI WA JAMII",
+    responses: 2770,
+    candidates: [
+      { name: "MONICA JOSEPH",             color: "Blue",   pct: 41.9 },
+      { name: "CHIMAMY SMILE FOUNDATION",  color: "Red",    pct: 34.9 },
+      { name: "REBECCA MANASE",            color: "Orange", pct: 23.2 }
+    ]
+  },
+  {
+    title: "16. UREMBO NA UTANASHATI",
+    responses: 2460,
+    candidates: [
+      { name: "LILIAN SALOON",    color: "Blue",   pct: 48.8 },
+      { name: "G. BEAUTY SALOON", color: "Red",    pct: 32.8 },
+      { name: "ASHIYZ MAKE UP",   color: "Orange", pct: 18.4 }
+    ]
+  },
+  {
+    title: "17. MFANYABIASHARA BORA WA COSMETICS",
+    responses: 2844,
+    candidates: [
+      { name: "SOPHY ZURI",         color: "Blue",   pct: 15.9 },
+      { name: "SYLIVER ROSE",       color: "Red",    pct: 21.1 },
+      { name: "MAAAE COSMETICS",    color: "Orange", pct: 18.6 },
+      { name: "DOUBLE M COSMETICS", color: "Green",  pct: 11.8 },
+      { name: "BEATHA MODEST",      color: "Purple", pct: 6.6  },
+      { name: "RYNE AURA",          color: "Cyan",   pct: 13.4 },
+      { name: "I-LINK COSMETICS",   color: "Pink",   pct: 12.5 }
+    ]
+  },
+  {
+    title: "18. FASHION DESIGNER",
+    responses: 3756,
+    candidates: [
+      { name: "HAPPY COLLECTION",  color: "Blue",   pct: 71.4 },
+      { name: "LINDA DESIGNER",    color: "Red",    pct: 22.2 },
+      { name: "SALCHAZ DESIGNER",  color: "Orange", pct: 6.5  }
+    ]
+  },
+  {
+    title: "19. MWANDISHI BORA WA HABARI",
+    responses: 2097,
+    candidates: [
+      { name: "ZUBEDA HANDRISH (CROWN TV)",    color: "Blue", pct: 55.9 },
+      { name: "JOYCE MBALILWA (BLESSED HOPE)", color: "Red",  pct: 44.1 }
+    ]
+  },
+  {
+    title: "20. MTANGAZAJI BORA WA REDIO",
+    responses: 2406,
+    candidates: [
+      { name: "ESTHER MABULA (STORM FM)",      color: "Blue",   pct: 50.5 },
+      { name: "AGNESS KILALA (RUBONDO FM)",    color: "Red",    pct: 26.5 },
+      { name: "SUZZANI KIMARO (BLESSED HOPE)", color: "Orange", pct: 23.0 }
+    ]
+  },
+  {
+    title: "21. MMILIKI BORA WA SHULE (CEO)",
+    responses: 2036,
+    candidates: [
+      { name: "KADAMA ENGLISH MEDIUM PRE & PRIMARY SCHOOL", color: "Blue",   pct: 97.7 },
+      { name: "OPTION 2",                                   color: "Red",    pct: 1.4  },
+      { name: "NYANKUMBU GIRLS SECONDARY SCHOOL",           color: "Orange", pct: 0.9  }
+    ]
+  },
+  {
+    title: "22. MCHIMBAJI BORA WA MADINI",
+    responses: 2500,
+    candidates: [
+      { name: "ASIA MASIMBA",  color: "Blue", pct: 45.4 },
+      { name: "SALMA MIPAWA",  color: "Red",  pct: 54.6 }
+    ]
+  },
+  {
+    title: "23. MCHIMBAJI CHIPUKIZI WA MADINI",
+    responses: 2104,
+    candidates: [
+      { name: "AGNESS KIHAMBA", color: "Blue",   pct: 50.3 },
+      { name: "MOSI YATABU",    color: "Red",    pct: 22.4 },
+      { name: "AZIZA RASHIDI",  color: "Orange", pct: 27.3 }
+    ]
+  },
+  {
+    title: "24. UREMBO NA UTANASHATI CHIPUKIZI",
+    responses: 1263,
+    candidates: [
+      { name: "JAMILA MAKEUP", color: "Blue",   pct: 60.6 },
+      { name: "HALIMA MAKEUP", color: "Red",    pct: 37.5 },
+      { name: "OPTION 2",      color: "Orange", pct: 1.9  }
+    ]
+  },
+  {
+    title: "25. MC BORA",
+    responses: 2344,
+    candidates: [
+      { name: "ROSE AYOMA PAUL",        color: "Blue",   pct: 31.9 },
+      { name: "MC MAIGE",               color: "Red",    pct: 38.3 },
+      { name: "MC WA DUNIA (MWAMVITA)", color: "Orange", pct: 29.8 }
+    ]
+  },
+  {
+    title: "26. SANAA NA UBUNIFU",
+    responses: 2078,
+    candidates: [
+      { name: "ROCK G",           color: "Blue", pct: 53.8 },
+      { name: "ASHABLOOM STUDIO", color: "Red",  pct: 46.2 }
+    ]
+  },
+  {
+    title: "27. MWANAMKE MWENYE USHAWISHI",
+    responses: 2051,
+    candidates: [
+      { name: "MARIAM SHARIFFU",       color: "Blue",   pct: 31.5 },
+      { name: "CATHERINE HENRY",       color: "Red",    pct: 42.6 },
+      { name: "BERTHA KOMBA KASIKANA", color: "Orange", pct: 24.4 },
+      { name: "BERTHA KOMBA",          color: "Green",  pct: 1.5  }
+    ]
+  },
+  {
+    title: "28. KILIMO NA UFUGAJI",
+    responses: 2024,
+    candidates: [
+      { name: "GEITA FOOD PRODUCT (ADELINA KABAKAMA)", color: "Blue", pct: 73.1 },
+      { name: "LANY FARM",                             color: "Red",  pct: 26.9 }
+    ]
+  },
+  {
+    title: "29. KIONGOZI BORA TAASISI BINAFSI",
+    responses: 2043,
+    candidates: [
+      { name: "BERTHA KOMBA KASIKANA (TNCC)",                color: "Blue",   pct: 52.2 },
+      { name: "CATHERINE HENRY (MJILINK ESTATE COMPANY LTD)", color: "Red",   pct: 42.0 },
+      { name: "JANETH LUPONELO (GGML)",                      color: "Orange", pct: 2.9  },
+      { name: "BERTHA KOMBA (TNCC)",                         color: "Green",  pct: 2.9  }
+    ]
+  },
+  {
+    title: "30. MTUMISHI BORA SEKTA YA ELIMU",
+    responses: 1631,
+    candidates: [
+      { name: "OPTION 1", color: "Blue", pct: 100 }
+    ]
+  }
+];
+
+google.charts.load('current', {packages:['corechart']});
+google.charts.setOnLoadCallback(function(){
+
+  const container = document.getElementById('cards');
+
+  DATA.forEach((cat, idx) => {
+    const chartId = 'chart_' + idx;
+
+    const card = document.createElement('div');
+    card.className = 'q-card';
+    card.innerHTML = `
+      <div class="q-header">
+        <div class="q-title">${cat.title}</div>
+        <button class="copy-btn" id="copybtn_${idx}" onclick="copyData(${idx})">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="9" y="9" width="13" height="13" rx="2"/>
+            <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+          </svg>
+          Copy
+        </button>
+      </div>
+      <div class="q-count">${cat.responses.toLocaleString()} responses</div>
+      <div class="chart-div" id="${chartId}"></div>
+    `;
+    container.appendChild(card);
+
+    // Build data table with actual percentages + vote counts (HTML tooltip)
+    const rows = cat.candidates.map(c => {
+      const votes = Math.round((c.pct / 100) * cat.responses);
+      const tip = `<div style="padding:10px 14px;font-family:Roboto,Arial,sans-serif;min-width:160px">
+        <div style="font-size:12px;color:#5f6368;margin-bottom:6px">${c.name}</div>
+        <div style="font-size:15px;font-weight:700;color:#202124">${votes.toLocaleString()} (${c.pct}%)</div>
+      </div>`;
+      return [c.name, c.pct, tip];
+    });
+    const tableData = new google.visualization.DataTable();
+    tableData.addColumn('string', 'Candidate');
+    tableData.addColumn('number', 'Percentage');
+    tableData.addColumn({type:'string', role:'tooltip', p:{html:true}});
+    tableData.addRows(rows);
+
+    const colors = cat.candidates.map(c => COLOR_MAP[c.color] || "#999");
+
+    // Taller chart for many candidates
+    const chartEl = document.getElementById(chartId);
+    if (cat.candidates.length > 5) {
+      chartEl.style.height = (200 + cat.candidates.length * 18) + 'px';
+    }
+
+    const options = {
+      legend: {
+        position: 'right',
+        alignment: 'center',
+        textStyle: { fontSize: 11, color: '#202124' }
+      },
+      pieSliceText: 'percentage',
+      pieSliceTextStyle: { fontSize: 12, bold: true, color: '#ffffff' },
+      chartArea: { left: 10, top: 10, width: '55%', height: '90%' },
+      colors: colors,
+      backgroundColor: 'transparent',
+      enableInteractivity: true,
+      tooltip: { isHtml: true }
+    };
+
+    const chart = new google.visualization.PieChart(document.getElementById(chartId));
+    chart.draw(tableData, options);
+  });
+});
+
+function copyData(idx){
+  const cat = DATA[idx];
+  const txt = cat.candidates.map(c => `${c.name}: ${c.pct}%`).join('\n');
+  navigator.clipboard.writeText(`${cat.title}\nResponses: ${cat.responses.toLocaleString()}\n${txt}`).then(() => {
+    const btn = document.getElementById('copybtn_' + idx);
+    btn.innerHTML = '✓ Copied';
+    setTimeout(() => {
+      btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012 2v1"/></svg> Copy`;
+    }, 1800);
+  });
+}
+</script>
+</body>
+</html>
